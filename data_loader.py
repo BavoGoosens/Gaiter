@@ -4,12 +4,16 @@ from raw_data import RawData
 
 
 class DataLoader:
-
+    """
+    Creates a new DataLoader which scans and loads all csv files in the provided directory
+    """
     def __init__(self, file_directory):
         self.data = list()
         self.scan(file_directory)
 
-    """ This method scans for csv files in the directory structure and adds them to the loads them into the system"""
+    """
+    This method scans for csv files in the directory structure and loads them into the system
+    """
     def scan(self, file_directory):
         for file in os.listdir(file_directory):
             if file.endswith(".csv"):
@@ -17,6 +21,9 @@ class DataLoader:
                 path = file_directory + file
                 self.load(name, path)
 
+    """
+    This method creates the actual raw data object and stores it internally
+    """
     def load(self, name, location):
         label = name.split("_")[-1]
         t = list()
