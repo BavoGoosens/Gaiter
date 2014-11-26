@@ -232,3 +232,4 @@ pip-log.txt
 out/*
 *.iml/
 *.iml
+.vagrant/
