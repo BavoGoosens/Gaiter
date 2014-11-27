@@ -1,4 +1,4 @@
-from frame import Frame
+from data_utils.frame import Frame
 
 class Framer:
     def __init__(self, frame_size, frame_overlap):
