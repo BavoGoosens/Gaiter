@@ -19,8 +19,7 @@ class Framer:
         return self.frames
 
     def frame(self, data):
-        redundant_points = (len(data) - self.get_frame_total_size()) % self.get_frame_size()
-        print redundant_points
+        redundant_points = self.calculate_redundant_data_points(data)
         k = 0
         for i in range(1,redundant_points+1):
             if k % 2 == 0: del data[0]
@@ -37,4 +36,7 @@ class Framer:
             self.get_frames().append(Frame(frame_data, self.get_frame_size(), self.get_frame_overlap()));
             sample_counter = 0
             sample_index -= 2*self.get_frame_overlap()
+
+    def calculate_redundant_data_points(self, data):
+        return (len(data) - self.get_frame_total_size()) % self.get_frame_size()
 
