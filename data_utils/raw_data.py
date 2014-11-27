@@ -9,17 +9,23 @@ class RawData:
         self.z = z
         self.path = file_path
 
+    def get_label(self):
+        return self.label
+
     def get_time(self):
-        return self.time[1:]
+        return self.time
 
-    def get_x_axis(self):
-        return self.x[1:]
+    def get_x(self):
+        return self.x
 
-    def get_y_axis(self):
-        return self.y[1:]
+    def get_y(self):
+        return self.y
 
-    def get_z_axis(self):
-        return self.z[1:]
+    def get_z(self):
+        return self.z
+
+    def get_path(self):
+        return self.path
 
 
 

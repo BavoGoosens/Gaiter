@@ -25,20 +25,16 @@ class DataLoader:
     """
     This method creates the actual raw data object and stores it internally
     """
-    def load(self, name, location):
+    def load(self, name, path):
         label = name.split("_")[-1]
-        t = list()
-        x = list()
-        y = list()
-        z = list()
-        reader = csv.reader(open(location, 'rb'))
+        reader = csv.reader(open(path, 'rb'))
         for row in reader:
-            t.append(row[0])
-            x.append(row[1])
-            y.append(row[2])
-            z.append(row[3])
-        raw_data = RawData(label, t, x, y , z, location)
-        self.data.append(raw_data)
+            t = row[0]
+            x = row[1]
+            y = row[2]
+            z = row[3]
+            raw_data = RawData(label, t, x, y , z, path)
+            self.data.append(raw_data)
 
     def get_raw_data(self):
         return self.data
