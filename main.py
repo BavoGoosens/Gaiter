@@ -12,8 +12,8 @@ def main(argv):
     plt.show()"""
 
 def testFramer():
-    data = range(1,24+1)
-    framer = Framer(5, 2)
+    data = range(1,19+1)
+    framer = Framer(128, 64)
     framer.frame(data)
     frames = framer.get_frames()
     print "Frames:"
