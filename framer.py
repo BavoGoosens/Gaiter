@@ -22,18 +22,14 @@ class Framer:
 
         sample_counter = 0
         sample_index = 0
-        frame = Frame()
 
         while sample_index+self.get_frame_total_size() < len(data):
-
+            frame_data = list()
             while sample_counter < self.get_frame_total_size():
-                if sample_index >= 0:
-                    frame.add_data(data[sample_index])
+                frame_data.append(data[sample_index])
                 sample_counter += 1
                 sample_index += 1
-
-            self.get_frames().append(frame)
-            frame = Frame()
+            self.get_frames().append(Frame(frame_data, self.get_frame_size(), self.get_frame_overlap()));
             sample_counter = 0
             sample_index -= 2*self.get_frame_overlap()
 

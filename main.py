@@ -16,29 +16,49 @@ def testFramer():
     framer = Framer(3, 2)
     framer.frame(data)
     frames = framer.get_frames()
+    print "Frames:"
     for frame in frames:
         print frame.get_data()
+    print "Core data:"
+    for frame in frames:
+        print frame.get_core_data()
+    print "Overlapped data:"
+    for frame in frames:
+        print frame.get_overlap_data()
 
 def testFramer2(data):
     framer = Framer(128, 64)
     framer.frame(data)
     frames = framer.get_frames()
-    i = 1
-    for frame in frames:
-        print "Frame number "+str(i)
-        i += 1
-        for data in frame.get_data():
-            print data.get_time()
+    frame = frames[1]
+    print "Frame 1:"
+    print "Data:"
+    for data in frame.get_data():
+        print data.get_x()
+    print "Core data:"
+    for data in frame.get_core_data():
+        print data.get_x()
+    print "Overlapped data:"
+    for data in frame.get_overlap_data():
+        for overlap in data:
+            print overlap.get_x()
+    frame = frames[2]
+    print "Frame 2:"
+    print "Data:"
+    for data in frame.get_data():
+        print data.get_x()
+    print "Core data:"
+    for data in frame.get_core_data():
+        print data.get_x()
+    print "Overlapped data:"
+    for data in frame.get_overlap_data():
+        for overlap in data:
+            print overlap.get_x()
+        print "----------------"
 
 def testDataLoader():
     data_loader = DataLoader("data/train/")
     raw_data = data_loader.get_raw_data()
-    """for element in raw_data:
-        print "label: "+str(element.get_label())
-        print "time: "+str(element.get_time())
-        print "x: "+str(element.get_x())
-        print "y: "+str(element.get_y())
-        print "z: "+str(element.get_z())"""
     testFramer2(raw_data)
 
 
