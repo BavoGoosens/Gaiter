@@ -1,7 +1,7 @@
 import sys
-from data_loader import *
-from framer import Framer
-"""import matplotlib.pyplot as plt"""
+from data_utils.framer import *
+from data_utils.data_loader import *
+
 
 def main(argv):
     testDataLoader()

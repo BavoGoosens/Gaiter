@@ -1,6 +1,7 @@
 import os
 import csv
-from raw_data import RawData
+
+from data_utils.raw_data import RawData
 
 
 class DataLoader:
