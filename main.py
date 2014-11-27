@@ -5,11 +5,16 @@ from data_utils.data_loader import *
 
 def main(argv):
     #testDataLoader()
-    testFramer()
-"""    plt.plot(t, x)
-    plt.plot(t, y)
-    plt.plot(t, z)
-    plt.show()"""
+    #testFramer()
+
+    frame_size = 128
+    frame_overlap = 64
+
+    data_loader = DataLoader("data/train/")
+    raw_data_list = data_loader.get_raw_data()
+    framer = Framer(frame_size, frame_overlap)
+    framer.frame(raw_data_list)
+    frames = framer.get_frames()
 
 def testFramer():
     data = range(1,19+1)
