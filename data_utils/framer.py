@@ -20,10 +20,16 @@ class Framer:
 
     def frame(self, data):
 
+        redundant_points = (len(data) - self.get_frame_total_size()) % self.get_frame_size()
+        print redundant_points
+        k = 0
+        for i in range(1,redundant_points+1):
+            if k % 2 == 0: del data[0]
+            else: del data[-1]
+            k += 1
         sample_counter = 0
         sample_index = 0
-
-        while sample_index+self.get_frame_total_size() < len(data):
+        while sample_index+self.get_frame_total_size() < len(data)+1:
             frame_data = list()
             while sample_counter < self.get_frame_total_size():
                 frame_data.append(data[sample_index])

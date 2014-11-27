@@ -4,27 +4,31 @@ from data_utils.data_loader import *
 
 
 def main(argv):
-    testDataLoader()
-    #testFramer()
+    #testDataLoader()
+    testFramer()
 """    plt.plot(t, x)
     plt.plot(t, y)
     plt.plot(t, z)
     plt.show()"""
 
 def testFramer():
-    data = ["Test1", "Test2", "Test3", "Test4", "Test5", "Test6", "Test7", "Test8", "Test9", "Test10", "Test11", "Test12", "Test13", "Test14", "Test15", "Test16", "Test17", "Test18", "Test19", "Test20"]
+    data = range(1,21)
     framer = Framer(3, 2)
     framer.frame(data)
     frames = framer.get_frames()
     print "Frames:"
+    i = 1
     for frame in frames:
-        print frame.get_data()
+        print "Frame "+str(i)+": "+str(frame.get_data())
+        i += 1
     print "Core data:"
     for frame in frames:
-        print frame.get_core_data()
+        print "Frame "+str(i)+": "+str(frame.get_core_data())
+        i += 1
     print "Overlapped data:"
     for frame in frames:
-        print frame.get_overlap_data()
+        print "Frame "+str(i)+": "+str(frame.get_overlap_data())
+        i += 1
 
 def testFramer2(data):
     framer = Framer(128, 64)
