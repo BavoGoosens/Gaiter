@@ -1,6 +1,9 @@
 import sys
-from data_loader import *
+
 import matplotlib.pyplot as plt
+
+from data_utils.data_loader import *
+
 
 def main(argv):
     data_loader = DataLoader("data/train/")
