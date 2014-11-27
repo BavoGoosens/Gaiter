@@ -19,7 +19,6 @@ class Framer:
         return self.frames
 
     def frame(self, data):
-
         redundant_points = (len(data) - self.get_frame_total_size()) % self.get_frame_size()
         print redundant_points
         k = 0
