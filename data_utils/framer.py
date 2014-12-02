@@ -10,9 +10,11 @@ class Framer:
         self.frame_overlap = frame_overlap
         self.framed_raw_data_list = list()
 
+    # Return the size of the core frame
     def get_frame_size(self):
         return self.frame_size
 
+    # Return how much overlap there is in each frame
     def get_frame_overlap(self):
         return self.frame_overlap
 
@@ -20,11 +22,11 @@ class Framer:
     def get_frame_total_size(self):
         return self.get_frame_size() + self.get_frame_overlap()*2
 
-    # Return the frames, returns an empty list if Framer.frame() hasn't been called first
+    # Return the framed raw data objects, returns an empty list if Framer.frame() hasn't been called first
     def get_framed_raw_data_list(self):
         return self.framed_raw_data_list
 
-    # Split the given raw data into frames
+    # Split the given raw data object into frames and store it into a framed raw data object
     def frame(self, raw_data):
         data = raw_data.get_data_rows()
         data = self.delete_redundant_data_points(data)
