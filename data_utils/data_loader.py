@@ -1,7 +1,9 @@
 import os
 import csv
+from collections import defaultdict
 
 from data_utils.raw_data import RawData
+from data_utils.data_row import DataRow
 
 
 class DataLoader:
@@ -28,13 +30,16 @@ class DataLoader:
     def load(self, name, path):
         label = name.split("_")[-1]
         reader = csv.reader(open(path, 'rb'))
+        data_rows = list()
         for row in reader:
             t = row[0]
             x = row[1]
             y = row[2]
             z = row[3]
-            raw_data = RawData(label, t, x, y , z, path)
-            self.data.append(raw_data)
+            data_row = DataRow(t, x, y, z)
+            data_rows.append(data_row)
+        raw_data = RawData(label, path, data_rows)
+        self.data.append(raw_data)
 
     def get_raw_data(self):
         return self.data

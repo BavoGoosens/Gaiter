@@ -4,7 +4,7 @@ from data_utils.data_loader import *
 
 
 def main(argv):
-    testFramer()
+    #testFramer()
 
     frame_size = 128
     frame_overlap = 64
@@ -12,8 +12,15 @@ def main(argv):
     data_loader = DataLoader("data/train/")
     raw_data_list = data_loader.get_raw_data()
     framer = Framer(frame_size, frame_overlap)
-    framer.frame(raw_data_list)
-    frames = framer.get_frames()
+    for raw_data in raw_data_list:
+        framer.frame(raw_data)
+    framed_raw_data_list = framer.get_framed_raw_data_list()
+    framed_raw_data = framed_raw_data_list[0]
+    frames = framed_raw_data.get_frames()
+    frame = frames[0]
+    print frame.get_x_data()
+    print len(frame.get_x_data())
+
 
 def testFramer():
     data = range(1,100+1)

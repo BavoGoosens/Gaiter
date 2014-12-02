@@ -1,4 +1,6 @@
-from data_utils.frame import Frame
+from data_utils.frame import *
+from data_utils.raw_data import *
+from data_utils.framed_raw_data import *
 
 class Framer:
 
@@ -6,7 +8,7 @@ class Framer:
     def __init__(self, frame_size, frame_overlap):
         self.frame_size = frame_size
         self.frame_overlap = frame_overlap
-        self.frames = list()
+        self.framed_raw_data_list = list()
 
     def get_frame_size(self):
         return self.frame_size
@@ -19,13 +21,14 @@ class Framer:
         return self.get_frame_size() + self.get_frame_overlap()*2
 
     # Return the frames, returns an empty list if Framer.frame() hasn't been called first
-    def get_frames(self):
-        return self.frames
+    def get_framed_raw_data_list(self):
+        return self.framed_raw_data_list
 
-    # Split the given data into frames
-    def frame(self, data):
-        self.frame = list()
+    # Split the given raw data into frames
+    def frame(self, raw_data):
+        data = raw_data.get_data_rows()
         data = self.delete_redundant_data_points(data)
+        frames = list()
         sample_counter = 0
         sample_index = 0
         while sample_index+self.get_frame_total_size() <= len(data):
@@ -34,9 +37,12 @@ class Framer:
                 frame_data.append(data[sample_index])
                 sample_counter += 1
                 sample_index += 1
-            self.get_frames().append(Frame(frame_data, self.get_frame_size(), self.get_frame_overlap()));
+            frames.append(Frame(frame_data, self.get_frame_size(), self.get_frame_overlap(), raw_data));
             sample_counter = 0
             sample_index -= 2*self.get_frame_overlap()
+
+        framed_raw_data = FramedRawData(frames)
+        self.framed_raw_data_list.append(framed_raw_data)
 
     # Delete redundant points from the given data, redundant points are points that cannot be fitted into a frame
     def delete_redundant_data_points(self, data):

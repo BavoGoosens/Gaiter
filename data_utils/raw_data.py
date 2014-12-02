@@ -1,31 +1,21 @@
 
 
 class RawData:
-    def __init__(self, label, t, x, y, z, file_path):
+    def __init__(self, label, path, data_rows):
         self.label = label
-        self.time = t
-        self.x = x
-        self.y = y
-        self.z = z
-        self.path = file_path
+        self.path = path
+        self.data_rows = data_rows
 
     def get_label(self):
         return self.label
 
-    def get_time(self):
-        return self.time
-
-    def get_x(self):
-        return self.x
-
-    def get_y(self):
-        return self.y
-
-    def get_z(self):
-        return self.z
-
     def get_path(self):
         return self.path
+
+    def get_data_rows(self):
+        return self.data_rows
+
+
 
 
 
