@@ -4,7 +4,6 @@ from data_utils.data_loader import *
 
 
 def main(argv):
-    #testDataLoader()
     testFramer()
 
     frame_size = 128
