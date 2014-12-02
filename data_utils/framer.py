@@ -42,9 +42,9 @@ class Framer:
             frames.append(Frame(frame_data, self.get_frame_size(), self.get_frame_overlap(), raw_data));
             sample_counter = 0
             sample_index -= 2*self.get_frame_overlap()
-
-        framed_raw_data = FramedRawData(frames)
-        self.framed_raw_data_list.append(framed_raw_data)
+        if len(frames) > 0:
+            framed_raw_data = FramedRawData(frames)
+            self.framed_raw_data_list.append(framed_raw_data)
 
     # Delete redundant points from the given data, redundant points are points that cannot be fitted into a frame
     def delete_redundant_data_points(self, data):
