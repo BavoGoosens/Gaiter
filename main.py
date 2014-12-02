@@ -1,6 +1,7 @@
 import sys
 from data_utils.framer import *
 from data_utils.data_loader import *
+import matplotlib.pyplot as plt
 
 
 def main(argv):
@@ -19,6 +20,8 @@ def main(argv):
     frames = framed_raw_data.get_frames()
     frame = frames[0]
     print frame.get_x_data()
+    plt.plot(frame.get_t_data(), frame.get_x_data())
+    plt.show()
     print len(frame.get_x_data())
 
 

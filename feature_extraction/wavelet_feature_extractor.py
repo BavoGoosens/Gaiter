@@ -7,3 +7,6 @@ class WaveletFeatureExtractor(FeatureExtractor):
 
     def extract_features(self):
         pass
+
+    def calculate_decomposition_coefficients(self):
+        pass
