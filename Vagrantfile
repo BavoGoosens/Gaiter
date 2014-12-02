@@ -11,6 +11,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "ubuntu/trusty32"
+  config.ssh.forward_agent = true
+  config.ssh.forward_x11 = true
   config.vm.provision :shell, path: "bootstrap.sh"
 
   # Disable automatic box update checking. If you disable this, then

@@ -1,7 +1,10 @@
 import sys
 from data_utils.framer import *
 from data_utils.data_loader import *
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 
 
 def main(argv):
@@ -16,9 +19,9 @@ def main(argv):
     for raw_data in raw_data_list:
         framer.frame(raw_data)
     framed_raw_data_list = framer.get_framed_raw_data_list()
-    framed_raw_data = framed_raw_data_list[0]
+    framed_raw_data = framed_raw_data_list[10]
     frames = framed_raw_data.get_frames()
-    frame = frames[0]
+    frame = frames[3]
     print frame.get_x_data()
     plt.plot(frame.get_t_data(), frame.get_x_data())
     plt.show()
