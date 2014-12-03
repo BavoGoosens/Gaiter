@@ -26,7 +26,7 @@ def main(argv):
     feature_extractor = TimeDomainFeatureExtractor()
     featured_frame = feature_extractor.extract_features(frame)
     features = featured_frame.get_all_features()
-    for key in features.keys():
+    for key in sorted(features.keys()):
         print str(key)+": "+str(features[key])
     plt.plot(frame.get_t_data(), frame.get_x_data())
     plt.plot(frame.get_t_data(), frame.get_y_data())
