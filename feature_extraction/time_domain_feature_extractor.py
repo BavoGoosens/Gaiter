@@ -1,95 +1,111 @@
-from feature_extractor import FeatureExtractor
+from data_utils import featured_frame
+from data_utils.featured_frame import FeaturedFrame
+from feature_extractor import *
+from data_utils.featured_frame import *
 
-# TODO
+import numpy as np
+
 class TimeDomainFeatureExtractor(FeatureExtractor):
-    def __init__(self, frame):
-        self.frame = frame
 
-    def set_frame(self, frame):
-        self.frame = frame
+    def extract_features(self, frame):
+        frame = FeaturedFrame(frame)
+        self.calculate_mean(frame)
+        self.calculate_integral(frame)
+        self.calculate_kurtosis(frame)
+        self.calculate_abs_mean(frame)
+        self.calculate_variance(frame)
+        self.calculate_minimum(frame)
+        self.calculate_maximum(frame)
+        self.calculate_abs_minimum(frame)
+        self.calculate_abs_maximum(frame)
+        self.calculate_avg_peak_distance(frame)
+        self.calculate_peak_mean(frame)
+        self.calculate_variance_in_peak(frame)
+        self.calculate_apf(frame)
+        self.calculate_variance_apf(frame)
+        self.calculate_root_mean_square(frame)
+        self.calculate_min_max_difference(frame)
+        self.calculate_percentiles(frame)
+        self.calculate_skewness(frame)
+        self.calculate_median(frame)
+        self.calculate_root_mean_square_of_integral(frame)
+        self.calculate_mean_min_max_sums(frame)
+        return frame
 
-    def extract_features(self):
-        self.calculate_mean()
-        self.calculate_integral()
-        self.calculate_kurtosis()
-        self.calculate_abs_mean()
-        self.calculate_variance()
-        self.calculate_minimum()
-        self.calculate_maximum()
-        self.calculate_abs_minimum()
-        self.calculate_abs_maximum()
-        self.calculate_avg_peak_distance()
-        self.calculate_peak_mean()
-        self.calculate_variance_in_peak()
-        self.calculate_apf()
-        self.calculate_variance_apf()
-        self.calculate_root_mean_square()
-        self.calculate_min_max_difference()
-        self.calculate_percentiles()
-        self.calculate_skewness()
-        self.calculate_median()
-        self.calculate_root_mean_square_of_integral()
-        self.calculate_mean_min_max_sums()
+    def calculate_mean(self, frame):
+        x_axis = frame.get_x_data()
+        y_axis = frame.get_y_data()
+        z_axis = frame.get_z_data()
+        frame.add_feature('x_mean', np.mean(x_axis))
+        frame.add_feature('y_mean', np.mean(y_axis))
+        frame.add_feature('z_mean', np.mean(z_axis))
 
-    def calculate_mean(self):
+    def calculate_integral(self, frame):
         pass
 
-    def calculate_integral(self):
+    def calculate_kurtosis(self, frame):
         pass
 
-    def calculate_kurtosis(self):
+    def calculate_abs_mean(self, frame):
+        x_axis = frame.get_x_data()
+        y_axis = frame.get_y_data()
+        z_axis = frame.get_z_data()
+        frame.add_feature('x_abs_mean', abs(np.mean(x_axis)))
+        frame.add_feature('y_abs_mean', abs(np.mean(y_axis)))
+        frame.add_feature('z_abs_mean', abs(np.mean(z_axis)))
+
+    def calculate_variance(self, frame):
         pass
 
-    def calculate_abs_mean(self):
+    def calculate_minimum(self, frame):
+        x_axis = frame.get_x_data()
+        y_axis = frame.get_y_data()
+        z_axis = frame.get_z_data()
+        frame.add_feature('x_min', min(x_axis))
+        frame.add_feature('y_min', min(y_axis))
+        frame.add_feature('z_min', min(z_axis))
+
+    def calculate_maximum(self, frame):
         pass
 
-    def calculate_variance(self):
+    def calculate_abs_minimum(self, frame):
         pass
 
-    def calculate_minimum(self):
+    def calculate_abs_maximum(self, frame):
         pass
 
-    def calculate_maximum(self):
+    def calculate_avg_peak_distance(self, frame):
         pass
 
-    def calculate_abs_minimum(self):
+    def calculate_peak_mean(self, frame):
         pass
 
-    def calculate_abs_maximum(self):
+    def calculate_variance_in_peak(self, frame):
         pass
 
-    def calculate_avg_peak_distance(self):
+    def calculate_apf(self, frame):
         pass
 
-    def calculate_peak_mean(self):
+    def calculate_variance_apf(self, frame):
         pass
 
-    def calculate_variance_in_peak(self):
+    def calculate_root_mean_square(self, frame):
         pass
 
-    def calculate_apf(self):
+    def calculate_min_max_difference(self, frame):
         pass
 
-    def calculate_variance_apf(self):
+    def calculate_percentiles(self, frame):
         pass
 
-    def calculate_root_mean_square(self):
+    def calculate_skewness(self, frame):
         pass
 
-    def calculate_min_max_difference(self):
+    def calculate_median(self, frame):
         pass
 
-    def calculate_percentiles(self):
+    def calculate_root_mean_square_of_integral(self, frame):
         pass
 
-    def calculate_skewness(self):
-        pass
-
-    def calculate_median(self):
-        pass
-
-    def calculate_root_mean_square_of_integral(self):
-        pass
-
-    def calculate_mean_min_max_sums(self):
+    def calculate_mean_min_max_sums(self, frame):
         pass

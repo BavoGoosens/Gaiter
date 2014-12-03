@@ -32,12 +32,14 @@ class DataLoader:
         reader = csv.reader(open(path, 'rb'))
         data_rows = list()
         for row in reader:
-            t = row[0]
-            x = row[1]
-            y = row[2]
-            z = row[3]
-            data_row = DataRow(t, x, y, z)
-            data_rows.append(data_row)
+            if 't' not in row[0]:
+                t = float(row[0])
+                x = float(row[1])
+                y = float(row[2])
+                z = float(row[3])
+                data_row = DataRow(t, x, y, z)
+                data_rows.append(data_row)
+
         raw_data = RawData(label, path, data_rows)
         self.data.append(raw_data)
 
