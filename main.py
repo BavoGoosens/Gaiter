@@ -1,6 +1,7 @@
 import sys
 from data_utils.framer import *
 from data_utils.data_loader import *
+from feature_extraction.time_domain_feature_extractor import *
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -21,13 +22,16 @@ def main(argv):
     framed_raw_data_list = framer.get_framed_raw_data_list()
     framed_raw_data = framed_raw_data_list[10]
     frames = framed_raw_data.get_frames()
-    frame = frames[5]
-    print frame.get_x_data()
-    #plt.plot(frame.get_t_data(), frame.get_x_data())
-    #plt.plot(frame.get_t_data(), frame.get_y_data())
+    frame = frames[8]
+    feature_extractor = TimeDomainFeatureExtractor()
+    featured_frame = feature_extractor.extract_features(frame)
+    features = featured_frame.get_all_features()
+    for key in features.keys():
+        print str(key)+": "+str(features[key])
+    plt.plot(frame.get_t_data(), frame.get_x_data())
+    plt.plot(frame.get_t_data(), frame.get_y_data())
     plt.plot(frame.get_t_data(), frame.get_z_data())
     plt.savefig('test.png')
-    print len(frame.get_x_data())
 
 
 def testFramer():

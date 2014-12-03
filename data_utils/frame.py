@@ -1,4 +1,4 @@
-class Frame:
+class Frame(object):
 
     # Initialize the frame
     # The given size and overlap must be compatible with the size of the data list
