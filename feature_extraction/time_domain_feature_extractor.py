@@ -5,11 +5,13 @@ from data_utils.featured_frame import *
 
 import numpy as np
 import scipy.stats as sts
+import scipy.integrate as int
 
 class TimeDomainFeatureExtractor(FeatureExtractor):
 
     def extract_features(self, frame):
-        frame = FeaturedFrame(frame)
+        if not isinstance(frame, FeaturedFrame):
+            frame = FeaturedFrame(frame)
         self.calculate_mean(frame)
         self.calculate_integral(frame)
         self.calculate_kurtosis(frame)
@@ -19,7 +21,7 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         self.calculate_maximum(frame)
         self.calculate_abs_minimum(frame)
         self.calculate_abs_maximum(frame)
-        self.calculate_avg_peak_distance(frame)
+        #self.calculate_avg_peak_distance(frame)
         self.calculate_peak_mean(frame)
         self.calculate_variance_in_peak(frame)
         self.calculate_apf(frame)
@@ -31,6 +33,7 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         self.calculate_median(frame)
         self.calculate_root_mean_square_of_integral(frame)
         self.calculate_mean_min_max_sums(frame)
+        self.calculate_std(frame)
         return frame
 
     def calculate_mean(self, frame):
@@ -42,7 +45,13 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         frame.add_feature('z_mean', np.mean(z_axis))
 
     def calculate_integral(self, frame):
-        pass
+        t_axis = frame.get_t_data()
+        x_axis = frame.get_x_data()
+        y_axis = frame.get_y_data()
+        z_axis = frame.get_z_data()
+        frame.add_feature('x_integral', int.simps(x_axis))
+        frame.add_feature('y_integral', int.simps(y_axis))
+        frame.add_feature('z_integral', int.simps(z_axis))
 
     def calculate_kurtosis(self, frame):
         x_axis = frame.get_x_data()
@@ -101,7 +110,24 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         frame.add_feature('z_abs_max', abs(max(z_axis)))
 
     def calculate_avg_peak_distance(self, frame):
-        pass
+        x_peak_distances = self.calculate_peak_distances(frame.get_x_data())
+        y_peak_distances = self.calculate_peak_distances(frame.get_y_data())
+        z_peak_distances = self.calculate_peak_distances(frame.get_z_data())
+        frame.add_feature('x_avg_peak_dist', np.mean(x_peak_distances))
+        frame.add_feature('y_avg_peak_dist', np.mean(y_peak_distances))
+        frame.add_feature('z_avg_peak_dist', np.mean(z_peak_distances))
+
+    def calculate_peak_distances(self, a):
+        peaks = self.peakdetect(a)
+        max_peaks = peaks[0]
+        min_peaks = peaks[1]
+        print max_peaks
+        print min_peaks
+        distances = list()
+        k = len(max_peaks)-1 if len(max_peaks) < len(min_peaks) else len(min_peaks)
+        for i in range(0,k):
+            distances.append(max_peaks[i] - min_peaks[i])
+        return distances
 
     def calculate_peak_mean(self, frame):
         pass
@@ -164,3 +190,11 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
 
     def calculate_mean_min_max_sums(self, frame):
         pass
+
+    def calculate_std(self, frame):
+        x_axis = frame.get_x_data()
+        y_axis = frame.get_y_data()
+        z_axis = frame.get_z_data()
+        frame.add_feature('x_std', np.std(x_axis))
+        frame.add_feature('y_std', np.std(y_axis))
+        frame.add_feature('z_std', np.std(z_axis))
