@@ -2,6 +2,8 @@ import sys
 from data_utils.framer import *
 from data_utils.data_loader import *
 from feature_extraction.time_domain_feature_extractor import *
+from monitor.timer import Timer
+import monitor.time_complexity_monitor as moni
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -14,12 +16,19 @@ def main(argv):
     frame_size = 128
     frame_overlap = 64
 
-    data_loader = DataLoader("data/train/")
-    raw_data_list = data_loader.get_raw_data()
-    framer = Framer(frame_size, frame_overlap)
-    for raw_data in raw_data_list:
-        framer.frame(raw_data)
-    framed_raw_data_list = framer.get_framed_raw_data_list()
+    with Timer() as t:
+        data_loader = DataLoader("data/train/")
+        raw_data_list = data_loader.get_raw_data()
+    moni.post(t.ms, "loading", "all training data scanned and loaded")
+
+    with Timer() as t:
+        framer = Framer(frame_size, frame_overlap)
+        for raw_data in raw_data_list:
+            framer.frame(raw_data)
+        framed_raw_data_list = framer.get_framed_raw_data_list()
+    moni.post(t.ms, "framing", "Framed all data")
+
+    measure = moni.get_all_measurements()
     framed_raw_data = framed_raw_data_list[10]
     frames = framed_raw_data.get_frames()
     frame = frames[8]

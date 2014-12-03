@@ -6,12 +6,12 @@ class Timer(object):
         self.verbose = verbose
 
     def __enter__(self):
-        self.start = time.time()
+        self.start = time.clock()
         return self
 
     def __exit__(self, *args):
-        self.end = time.time()
-        self.secs = self.end - self.start
-        self.msecs = self.secs * 1000  # millisecs
+        self.end = time.clock()
+        self.s = self.end - self.start
+        self.ms = self.s * 1000  # millisecs
         if self.verbose:
-            print 'elapsed time: %f ms' % self.msecs
+            print 'elapsed time: %f ms' % self.ms

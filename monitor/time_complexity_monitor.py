@@ -10,8 +10,12 @@ categories = {loading, framing, feature extraction, walking classifier, personal
 
 
 def post(time, category, msg):
-    measurements(category).append(msg, time)
+    measurements[category].append((msg, time))
 
 
 def get_measurements(category):
-    return measurements(category)
+    return measurements[category]
+
+
+def get_all_measurements():
+    return measurements
