@@ -28,7 +28,6 @@ def main(argv):
         framed_raw_data_list = framer.get_framed_raw_data_list()
     moni.post(t.ms, "framing", "Framed all data")
 
-    measure = moni.get_all_measurements()
     framed_raw_data = framed_raw_data_list[10]
     frames = framed_raw_data.get_frames()
     frame = frames[8]
