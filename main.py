@@ -2,6 +2,7 @@ import sys
 from data_utils.framer import *
 from data_utils.data_loader import *
 from feature_extraction.time_domain_feature_extractor import *
+from feature_extraction.frequency_domain_feature_extractor import *
 from monitor.timer import Timer
 import monitor.time_complexity_monitor as moni
 import matplotlib
@@ -33,6 +34,8 @@ def main(argv):
     frame = frames[8]
     feature_extractor = TimeDomainFeatureExtractor()
     featured_frame = feature_extractor.extract_features(frame)
+    feature_extractor = FrequencyDomainFeatureExtractor()
+    featured_frame = feature_extractor.extract_features(featured_frame)
     features = featured_frame.get_all_features()
     for key in sorted(features.keys()):
         print str(key)+": "+str(features[key])
