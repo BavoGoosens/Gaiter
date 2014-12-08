@@ -9,6 +9,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+from scipy import fft, arange
+
 
 
 def main(argv):
@@ -38,12 +40,17 @@ def main(argv):
     featured_frame = feature_extractor.extract_features(featured_frame)
     features = featured_frame.get_all_features()
     for key in sorted(features.keys()):
-        print str(key)+": "+str(features[key])
-    plt.plot(frame.get_t_data(), frame.get_x_data())
-    plt.plot(frame.get_t_data(), frame.get_y_data())
-    plt.plot(frame.get_t_data(), frame.get_z_data())
+        if isinstance(features[key], np.ndarray):
+            print str(key)+" length: "+str(len(features[key]))
+        else:
+            print str(key)+": "+str(features[key])
+    plt.plot(featured_frame.get_t_data(), featured_frame.get_y_data())
     plt.savefig('test.png')
-
+    plt.clf()
+    y = featured_frame.get_x_data()
+    for a in y:
+        print a
+    print featured_frame.get_feature('x_spectral_cos')
 
 def testFramer():
     data = range(1,100+1)
