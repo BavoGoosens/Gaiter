@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 sudo apt-get install -y python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose git
+sudo pip install PyWavelets
 if [[ -d "/home/vagrant/scikit-learn/" && ! -L "/home/vagrant/scikit-learn/" ]] ; then
     echo "Already installed"
     cd /home/vagrant/scikit-learn/
