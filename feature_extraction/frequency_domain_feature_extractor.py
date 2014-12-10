@@ -10,7 +10,7 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         if not isinstance(frame, FeaturedFrame):
             frame = FeaturedFrame(frame)
         self.add_spectral_coefficients(frame)
-        self.add_mel_scale_coefficients(frame)
+        #self.add_mel_scale_coefficients(frame)
         self.add_spectral_mean(frame)
         self.add_spectral_energy(frame)
         self.add_dc_component(frame)
@@ -25,7 +25,6 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         filtered_spectrum = np.dot(power_spectrum, self.melFilterBank(256))
         log_spectrum = np.log(filtered_spectrum)
         dctSpectrum = ff.dct(log_spectrum, type=2)
-        print (dctSpectrum)
 
     def add_spectral_coefficients(self, frame):
         x_axis = frame.get_x_data()
