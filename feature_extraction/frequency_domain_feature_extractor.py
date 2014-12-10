@@ -78,10 +78,6 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
     def calculate_ac_component(self):
         pass
 
-
-
-
-
     def calculate_correlation(self):
         pass
 
