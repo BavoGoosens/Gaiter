@@ -57,23 +57,22 @@ def main(argv):
     frames = framed_raw_data.get_frames()
     frame = frames[8]
     feature_extractor = TimeDomainFeatureExtractor()
-    featured_frame = feature_extractor.extract_features(frame)
+    frame = feature_extractor.extract_features(frame)
     feature_extractor = FrequencyDomainFeatureExtractor()
-    featured_frame = feature_extractor.extract_features(featured_frame)
-    features = featured_frame.get_all_features()
 
+    frame = feature_extractor.extract_features(frame)
+    feature_extractor = WaveletFeatureExtractor()
+    frame = feature_extractor.extract_features(frame)
+    features = frame.get_all_features()
     for key in sorted(features.keys()):
         if isinstance(features[key], np.ndarray):
             print str(key) + " length: " + str(len(features[key]))
         else:
             print str(key) + ": " + str(features[key])
     plt.plot(featured_frame.get_t_data(), featured_frame.get_y_data())
+
     plt.savefig('test.png')
     plt.clf()
-    y = featured_frame.get_x_data()
-    for a in y:
-        print a
-    print featured_frame.get_feature('x_spectral_cos')
 
 
 def testFramer():
