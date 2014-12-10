@@ -153,15 +153,6 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         frame.add_feature('y_std', np.std(y_axis))
         frame.add_feature('z_std', np.std(z_axis))
 
-
-
-
-
-
-
-
-
-
     def calculate_peak_distances(self, a):
         peaks = self.peakdetect(a)
         max_peaks = peaks[0]
