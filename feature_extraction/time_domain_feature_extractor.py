@@ -7,6 +7,9 @@ import numpy as np
 import scipy.stats as sts
 import scipy.integrate as int
 
+from scipy.interpolate import interp1d
+from sympy import mpmath
+
 class TimeDomainFeatureExtractor(FeatureExtractor):
 
     def extract_features(self, frame):
@@ -27,6 +30,7 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         self.add_skewness(frame)
         self.add_median(frame)
         self.add_std(frame)
+        self.add_derivative_coefficients(frame)
         return frame
 
     def add_mean(self, frame):
@@ -172,6 +176,19 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         frame.add_feature('x_avg_peak_dist', np.mean(x_peak_distances))
         frame.add_feature('y_avg_peak_dist', np.mean(y_peak_distances))
         frame.add_feature('z_avg_peak_dist', np.mean(z_peak_distances))
+
+    def add_derivative_coefficients(self, frame):
+        x_axis, y_axis, z_axis = frame.get_x_data(), frame.get_y_data(), frame.get_z_data()
+        frame.add_derivative('x', self.calculate_derivative_coefficients(x_axis))
+        frame.add_derivative('y', self.calculate_derivative_coefficients(x_axis))
+        frame.add_derivative('z', self.calculate_derivative_coefficients(x_axis))
+
+    def calculate_derivative_coefficients(self, data):
+        t = np.linspace(0, len(data)-1, len(data))
+        t2 = np.linspace(1, len(data)-2, len(data))
+        f = interp1d(t, data)
+        return mpmath.diff(f, t2)
+
 
     def calculate_peak_mean(self, frame):
         pass

@@ -7,6 +7,7 @@ class FeaturedFrame(Frame):
                                             frame.get_raw_data())
         self.features = dict()
         self.coeffs = dict()
+        self.derivative = dict()
 
     def add_feature(self, name, value):
         self.features[name] = value
@@ -19,6 +20,12 @@ class FeaturedFrame(Frame):
 
     def get_coefficients(self, name):
         return self.coeffs[name]
+
+    def add_derivative(self, name, value):
+        self.derivative[name] = value
+
+    def get_derivative(self, name):
+        return self.derivative[name]
 
     def get_all_features(self):
         return self.features
