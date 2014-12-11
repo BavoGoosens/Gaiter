@@ -4,10 +4,15 @@ from data_utils.data_loader import *
 from feature_extraction.time_domain_feature_extractor import *
 from feature_extraction.frequency_domain_feature_extractor import *
 from feature_extraction.wavelet_feature_extractor import *
+from walking_classifier.k_means import *
+from walking_classifier.k_means_mini_batch import *
+from walking_classifier.mean_shift import *
+from walking_classifier.db_scan import *
 from monitor.timer import Timer
 from scipy.sparse import csr_matrix
 import monitor.time_complexity_monitor as moni
 import matplotlib
+import pickle
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -55,21 +60,24 @@ def main(argv):
                 featured_frame = freq_feature_extractor.extract_features(featured_frame)
                 # featured_frame = wav_feature_extractor.extract_features(featured_frame)
                 bumpy_data_set.append(featured_frame)
-        flat_data_set = flatten(bumpy_data_set)
-        data_set = csr_matrix(flat_data_set)
-        save_sparse_csr("data", data_set)
-        print ("The data set dimension is " + str(data_set.shape))
+        with open('bin.dat', 'wb') as f:
+            pickle.dump(bumpy_data_set, f)
     else:
-        data_set = load_sparse_csr("data.npz")
-        print ("The data set dimension is " + str(data_set.shape))
+        with open('bin.dat') as f:
+            bumpy_data_set = pickle.load(f)
+        print(bumpy_data_set)
 
+        km = KMeans(bumpy_data_set)
+        kmmb = KMeansMiniBatch(bumpy_data_set)
+        ms = MeanShift(bumpy_data_set)
+        db = DBScan(bumpy_data_set)
 
-def flatten(featured_frame_list):
-    flat_list = list()
-    for f_frame in featured_frame_list:
-        features = f_frame.get_flat_features()
-        flat_list.append(features)
-    return flat_list
+        db.train()
+        ms.train()
+        kmmb.train(nb_clusters=4)
+        km.train(nb_clusters=4)
+
+        ms.get_walking_frames()
 
 
 def test_framer():
@@ -85,17 +93,6 @@ def test_framer():
         print "Core data: " + str(frame.get_core_data())
         print "Overlapped data: " + str(frame.get_overlap_data())
         i += 1
-
-
-def save_sparse_csr(filename, array):
-    np.savez(filename, data=array.data, indices=array.indices,
-             indptr=array.indptr, shape=array.shape)
-
-
-def load_sparse_csr(filename):
-    loader = np.load(filename)
-    return csr_matrix((  loader['data'], loader['indices'], loader['indptr']),
-                      shape=loader['shape'])
 
 
 if __name__ == '__main__':
