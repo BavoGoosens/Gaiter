@@ -7,6 +7,7 @@ from feature_extraction.wavelet_feature_extractor import *
 from walking_classifier.k_means import *
 from walking_classifier.k_means_mini_batch import *
 from walking_classifier.mean_shift import *
+from walking_classifier.db_scan import *
 from monitor.timer import Timer
 from scipy.sparse import csr_matrix
 import monitor.time_complexity_monitor as moni
@@ -69,7 +70,9 @@ def main(argv):
         km = KMeans(bumpy_data_set)
         kmmb = KMeansMiniBatch(bumpy_data_set)
         ms = MeanShift(bumpy_data_set)
+        db = DBScan(bumpy_data_set)
 
+        db.train()
         ms.train()
         kmmb.train(nb_clusters=4)
         km.train(nb_clusters=4)

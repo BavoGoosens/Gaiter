@@ -1,9 +1,5 @@
 import numpy as np
 from sklearn.cluster import MeanShift as MS, estimate_bandwidth
-from itertools import cycle
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 from collections import Counter
 from walking_classifier import WalkingClassifier
 
