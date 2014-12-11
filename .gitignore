@@ -233,3 +233,4 @@ out/*
 *.iml/
 *.iml
 .vagrant/
+bin.dat

@@ -13,7 +13,7 @@ from monitor.timer import Timer
 from scipy.sparse import csr_matrix
 import monitor.time_complexity_monitor as moni
 import matplotlib
-import pickle
+import cPickle as pickle
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -69,8 +69,14 @@ def main(argv):
             print str(raw_data_count)+": 100 %"
             print ""
             raw_data_count = raw_data_count + 1
-        with open('bin.dat', 'wb') as f:
-            pickle.dump(bumpy_data_set, f)
+
+        p = pickle.Pickler(open("bin.dat","wb"))
+        for data in bumpy_data_set:
+            p.dump(data)
+            p.clear_memo()
+
+       # with open('bin.dat', 'wb') as f:
+       #     pickle.dump(bumpy_data_set, f)
     else:
         # with open('bin.dat') as f:
         #     bumpy_data_set = pickle.load(f)
