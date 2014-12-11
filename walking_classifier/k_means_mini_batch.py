@@ -9,7 +9,6 @@ class KMeansMiniBatch(WalkingClassifier):
         super(KMeansMiniBatch, self).__init__(featured_frames)
         self.labels = list()
 
-
     def train(self, nb_clusters):
         data_set = self.data_set.toarray()
 

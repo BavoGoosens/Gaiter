@@ -1,6 +1,7 @@
 import sys
 from data_utils.framer import *
 from data_utils.data_loader import *
+from personal_classifier.support_vector_machine import SupportVectorMachine
 from feature_extraction.time_domain_feature_extractor import *
 from feature_extraction.frequency_domain_feature_extractor import *
 from feature_extraction.wavelet_feature_extractor import *
@@ -81,17 +82,20 @@ def main(argv):
             bumpy_data_set = pickle.load(f)
         print(bumpy_data_set)
 
-        km = KMeans(bumpy_data_set)
+        #km = KMeans(bumpy_data_set)
         kmmb = KMeansMiniBatch(bumpy_data_set)
-        ms = MeanShift(bumpy_data_set)
-        db = DBScan(bumpy_data_set)
+        #ms = MeanShift(bumpy_data_set)
+        #db = DBScan(bumpy_data_set)
 
-        db.train()
-        ms.train()
+        #db.train()
+        #ms.train()
         kmmb.train(nb_clusters=4)
-        km.train(nb_clusters=4)
+        #km.train(nb_clusters=4)
 
-        ms.get_walking_frames()
+        walking_data = kmmb.get_walking_frames()
+        svm = SupportVectorMachine(walking_data)
+        svm.test()
+
 
 
 def test_framer():
