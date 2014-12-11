@@ -95,6 +95,3 @@ class FeaturedFrame(Frame):
             for c in coeffs:
                 feats.append(c)
         return feats
-
-    def get_label(self):
-        return self.get_raw_data().get_label()
