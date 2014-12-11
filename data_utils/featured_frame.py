@@ -6,6 +6,7 @@ class FeaturedFrame(Frame):
         super(FeaturedFrame, self).__init__(frame.get_frame_data(), frame.get_size(), frame.get_overlap(),
                                             frame.get_raw_data())
         self.features = dict()
+        self.derivative = dict()
         self.coefficients = dict()
 
     def add_feature(self, name, value):
@@ -19,6 +20,12 @@ class FeaturedFrame(Frame):
 
     def get_coefficients(self, name):
         return self.coefficients[name]
+
+    def add_derivative(self, name, value):
+        self.derivative[name] = value
+
+    def get_derivative(self, name):
+        return self.derivative[name]
 
     def get_all_features(self):
         return self.features
