@@ -16,7 +16,7 @@ for raw_data in raw_data_list:
     framer.frame(raw_data)
 
 framed_raw_data_list = framer.get_framed_raw_data_list()
-frame = framed_raw_data_list[0].get_frames()[0]
+frame = framed_raw_data_list[3].get_frames()[7]
 
 feature_extractor = TimeDomainFeatureExtractor()
 frame = feature_extractor.extract_features(frame)
