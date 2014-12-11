@@ -2,8 +2,9 @@ from scipy.sparse import csr_matrix
 import numpy as np
 from itertools import cycle
 import matplotlib
+import random
 from collections import Counter
-
+from collections import defaultdict
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -13,6 +14,7 @@ class WalkingClassifier(object):
         self.featured_frames = featured_frames
         self.data_set = csr_matrix(self.flatten(featured_frames))
         self.labels = list()
+        self.unique = list()
 
     def flatten(self, featured_frame_list):
         flat_list = list()
@@ -36,21 +38,29 @@ class WalkingClassifier(object):
                      markeredgecolor='k', markersize=14)
         plt.savefig(filename)
 
-    def save_sparse_csr(self, filename, array):
-        np.savez(filename, data=array.data, indices=array.indices,
-                 indptr=array.indptr, shape=array.shape)
-
-    def load_sparse_csr(self, filename):
-        loader = np.load(filename)
-        return csr_matrix((  loader['data'], loader['indices'], loader['indptr']),
-                          shape=loader['shape'])
-
-    def get_walking_frames(self, cutoff=0.8, method='even'):
+    def get_walking_frames(self, cutoff=0.8, method='first', shuffle=False):
         walking_data = list()
+        clusters = defaultdict(list)
+        for idx, label in enumerate(self.labels):
+            clusters[label].append(self.featured_frames[idx])
+        if shuffle:
+            for l in clusters.itervalues():
+                random.shuffle(l)
+        count = Counter(self.labels)
+        select = dict()
         if method == 'even':
-            count = Counter(self.labels)
-            count = count.values()
-            select = [np.round(c * cutoff) for c in count]
-            rel_count = None
+            for l, c in count.iteritems():
+                select[l] = int(np.round(c * cutoff))
         else:
-            pass
+            nb = int(np.round(np.sum(count.values()) * cutoff))
+            for l, c in count.iteritems():
+                if c < nb and not nb == 0:
+                    select[l] = c
+                    nb -= c
+                elif c >= nb:
+                    select[l] = nb
+                    nb = 0
+        for label, number in select.iteritems():
+            data = clusters[label][:number]
+            walking_data.extend(data)
+        return walking_data

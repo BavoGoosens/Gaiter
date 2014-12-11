@@ -25,6 +25,7 @@ class DBScan(WalkingClassifier):
 
         # Black removed and is used for noise instead.
         unique_labels = set(self.labels)
+        self.unique = unique_labels
         colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
         for k, col in zip(unique_labels, colors):
             if k == -1:

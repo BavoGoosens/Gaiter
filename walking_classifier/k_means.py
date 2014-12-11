@@ -16,7 +16,7 @@ class KMeans(WalkingClassifier):
         self.labels = kmeans.labels_
         k_means_cluster_centers = kmeans.cluster_centers_
         k_means_labels_unique = np.unique(self.labels)
-
+        self.unique = k_means_labels_unique
         print("#############################K means######################################")
         print(Counter(self.labels))
 
