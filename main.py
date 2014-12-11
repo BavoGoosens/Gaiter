@@ -55,12 +55,20 @@ def main(argv):
         wav_feature_extractor = WaveletFeatureExtractor()
         # Extract features from the frames
         bumpy_data_set = list()
+        raw_data_count = 1
         for framed_raw_data in framed_raw_data_list:
+            frame_count = 0
+            length = len(framed_raw_data.get_frames())
             for frame in framed_raw_data.get_frames():
+                print str(raw_data_count)+": "+str(round((frame_count/float(length))*100, 2))+" %"
                 featured_frame = time_feature_extractor.extract_features(frame)
                 featured_frame = freq_feature_extractor.extract_features(featured_frame)
                 # featured_frame = wav_feature_extractor.extract_features(featured_frame)
                 bumpy_data_set.append(featured_frame)
+                frame_count = frame_count + 1
+            print str(raw_data_count)+": 100 %"
+            print ""
+            raw_data_count = raw_data_count + 1
         with open('bin.dat', 'wb') as f:
             pickle.dump(bumpy_data_set, f)
     else:
