@@ -27,7 +27,7 @@ def main(argv):
     frame_size = 128
     frame_overlap = 64
 
-    data_present = False
+    data_present = True
 
     if not data_present:
         # Load all the data
@@ -72,22 +72,22 @@ def main(argv):
         with open('bin.dat', 'wb') as f:
             pickle.dump(bumpy_data_set, f)
     else:
-        with open('bin.dat') as f:
-            bumpy_data_set = pickle.load(f)
-        print(bumpy_data_set)
-
-        #km = KMeans(bumpy_data_set)
-        kmmb = KMeansMiniBatch(bumpy_data_set)
-        #ms = MeanShift(bumpy_data_set)
-        #db = DBScan(bumpy_data_set)
-
-        #db.train()
-        #ms.train()
-        kmmb.train(nb_clusters=4)
-        #km.train(nb_clusters=4)
-
-        walking_data = kmmb.get_walking_frames()
-        svm = SupportVectorMachine(walking_data)
+        # with open('bin.dat') as f:
+        #     bumpy_data_set = pickle.load(f)
+        # print(bumpy_data_set)
+        #
+        # #km = KMeans(bumpy_data_set)
+        # kmmb = KMeansMiniBatch(bumpy_data_set)
+        # #ms = MeanShift(bumpy_data_set)
+        # #db = DBScan(bumpy_data_set)
+        #
+        # #db.train()
+        # #ms.train()
+        # kmmb.train(nb_clusters=4)
+        # #km.train(nb_clusters=4)
+        #
+        # walking_data = kmmb.get_walking_frames()
+        svm = SupportVectorMachine([])
         svm.test()
 
 
