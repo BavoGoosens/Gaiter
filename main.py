@@ -15,6 +15,9 @@ import monitor.time_complexity_monitor as moni
 import matplotlib
 import cPickle as pickle
 import os.path
+import random
+import numpy as np
+
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -55,6 +58,11 @@ def main(argv):
         for raw_data in raw_data_list:
             framer.frame(raw_data)
         framed_raw_data_list = framer.get_framed_raw_data_list()
+        nb = np.round(len(framed_raw_data_list) * 0.8)
+        
+        train_raw_data_list = framed_raw_data_list[:nb]
+        test_raw_data_list = framed_raw_data_list[nb:]
+
         length = 0
         for frd in framed_raw_data_list:
             length += len(frd.get_frames())
@@ -79,12 +87,18 @@ def main(argv):
         print "100 %"
         print "All features are calculated. Writing all data to hard disk for later use.."
 
-        flat_data_set = flatten(bumpy_data_set)
-        data_set = np.array(flat_data_set)
-        labels = np.array(extract_labels(bumpy_data_set))
-        np.save('data', data_set)
-        np.save('labels', labels)
-        print ("The data set's dimension is " + str(data_set.shape))
+        random.seed(0)
+        random.shuffle(bumpy_data_set)
+        flat_train_data_set = flatten(bumpy_data_set[:nb_train, :])
+        flat_test_data_set = flatten(bumpy_data_set[nb_train:, :])
+
+        train_data_set = np.array(flat_train_data_set)
+        train_labels = np.array(extract_labels(bumpy_data_set[:nb_train, :]))
+
+
+        np.save('data', train_data_set)
+        np.save('labels', train_labels)
+        print ("The data set's dimension is " + str(train_data_set.shape))
         print "All data is written to hard drive."
     else:
         print "Loading data from previous session..."
