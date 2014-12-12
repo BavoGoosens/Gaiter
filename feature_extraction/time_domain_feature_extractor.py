@@ -5,7 +5,7 @@ from data_utils.featured_frame import *
 
 import numpy as np
 import scipy.stats as sts
-import scipy.integrate as int
+import scipy.integrate as integr
 
 from scipy.interpolate import interp1d
 from sympy import mpmath
@@ -94,9 +94,9 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
             x_axis = frame.get_x_data()
             y_axis = frame.get_y_data()
             z_axis = frame.get_z_data()
-        frame.add_feature('x_integral'+der, int.simps(x_axis))
-        frame.add_feature('y_integral'+der, int.simps(y_axis))
-        frame.add_feature('z_integral'+der, int.simps(z_axis))
+        frame.add_feature('x_integral'+der, integr.simps(x_axis))
+        frame.add_feature('y_integral'+der, integr.simps(y_axis))
+        frame.add_feature('z_integral'+der, integr.simps(z_axis))
 
     def add_kurtosis(self, frame, derivative = False):
         der = ''
