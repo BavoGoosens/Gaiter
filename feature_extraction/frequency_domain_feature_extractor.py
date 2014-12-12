@@ -1,10 +1,13 @@
 from feature_extractor import *
 from data_utils.featured_frame import *
-
+from matplotlib.mlab import entropy as en
 import scipy.fftpack as ff
 import numpy as np
 
+
 class FrequencyDomainFeatureExtractor(FeatureExtractor):
+    def __init__(self, derivative=True):
+        super(FrequencyDomainFeatureExtractor, self).__init__(derivative)
 
     def extract_features(self, frame):
         if not isinstance(frame, FeaturedFrame):
@@ -13,8 +16,9 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         # add coefficients
         self.add_spectral_coefficients(frame)
 
-        # add coefficients derivative
-        self.add_spectral_coefficients(frame, True)
+        if self.derivative:
+            # add coefficients derivative
+            self.add_spectral_coefficients(frame, True)
 
         # add features
         self.add_spectral_mean(frame)
@@ -22,19 +26,20 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         self.add_spectral_variance(frame)
         self.add_spectral_std(frame)
         self.add_dc_component(frame)
+        self.add_spectral_entropy(frame)
 
-        # add features derivative
-        self.add_spectral_mean(frame, True)
-        self.add_spectral_energy(frame, True)
-        self.add_spectral_variance(frame, True)
-        self.add_spectral_std(frame, True)
+        if self.derivative:
+            # add features derivative
+            self.add_spectral_mean(frame, True)
+            self.add_spectral_energy(frame, True)
+            self.add_spectral_variance(frame, True)
+            self.add_spectral_std(frame, True)
+            self.add_spectral_entropy(frame, True)
 
         return frame
 
-
     # ADD COEFFICIENTS
-
-    def add_spectral_coefficients(self, frame, derivative = False):
+    def add_spectral_coefficients(self, frame, derivative=False):
         der = ''
         if derivative:
             x_axis = frame.get_derivative('x')
@@ -46,9 +51,9 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
             y_axis = frame.get_y_data()
             z_axis = frame.get_z_data()
 
-        frame.add_coefficients('x_spectral_cos'+der, self.calculate_spectral_coefficients(x_axis))
-        frame.add_coefficients('y_spectral_cos'+der, self.calculate_spectral_coefficients(y_axis))
-        frame.add_coefficients('z_spectral_cos'+der, self.calculate_spectral_coefficients(z_axis))
+        frame.add_coefficients('x_spectral_cos' + der, self.calculate_spectral_coefficients(x_axis))
+        frame.add_coefficients('y_spectral_cos' + der, self.calculate_spectral_coefficients(y_axis))
+        frame.add_coefficients('z_spectral_cos' + der, self.calculate_spectral_coefficients(z_axis))
 
     def add_mel_scale_coefficients(self, frame):
         x_axis = frame.get_x_data()
@@ -61,9 +66,6 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         else:
             self.add_spectral_coefficients(frame)
 
-    def add_linear_coefficients(self):
-        pass
-
     def calculate_spectral_coefficients(self, data):
         return ff.fft(data)
 
@@ -74,40 +76,41 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         log_spectrum = np.log(filtered_spectrum)
         dctSpectrum = ff.dct(log_spectrum, type=2)
 
-
     # ADD FEATURES
-
-    def add_spectral_mean(self, frame, derivative = False):
+    def add_spectral_mean(self, frame, derivative=False):
         der = ''
         if derivative:
             der = '_der'
-        frame.add_feature('x_spectral_mean'+der, np.mean(frame.get_coefficients('x_spectral_cos'+der)))
-        frame.add_feature('y_spectral_mean'+der, np.mean(frame.get_coefficients('y_spectral_cos'+der)))
-        frame.add_feature('z_spectral_mean'+der, np.mean(frame.get_coefficients('z_spectral_cos'+der)))
+        frame.add_feature('x_spectral_mean' + der, np.mean(frame.get_coefficients('x_spectral_cos' + der)))
+        frame.add_feature('y_spectral_mean' + der, np.mean(frame.get_coefficients('y_spectral_cos' + der)))
+        frame.add_feature('z_spectral_mean' + der, np.mean(frame.get_coefficients('z_spectral_cos' + der)))
 
-    def add_spectral_energy(self, frame, derivative = False):
+    def add_spectral_energy(self, frame, derivative=False):
         der = ''
         if derivative:
             der = '_der'
-        frame.add_feature('x_spectral_energy'+der, np.mean(np.power(frame.get_coefficients('x_spectral_cos'+der), 2)))
-        frame.add_feature('y_spectral_energy'+der, np.mean(np.power(frame.get_coefficients('y_spectral_cos'+der), 2)))
-        frame.add_feature('z_spectral_energy'+der, np.mean(np.power(frame.get_coefficients('z_spectral_cos'+der), 2)))
+        frame.add_feature('x_spectral_energy' + der,
+                          np.mean(np.power(frame.get_coefficients('x_spectral_cos' + der), 2)))
+        frame.add_feature('y_spectral_energy' + der,
+                          np.mean(np.power(frame.get_coefficients('y_spectral_cos' + der), 2)))
+        frame.add_feature('z_spectral_energy' + der,
+                          np.mean(np.power(frame.get_coefficients('z_spectral_cos' + der), 2)))
 
-    def add_spectral_variance(self, frame, derivative = False):
+    def add_spectral_variance(self, frame, derivative=False):
         der = ''
         if derivative:
             der = '_der'
-        frame.add_feature('x_spectral_variance'+der, np.var(frame.get_coefficients('x_spectral_cos'+der)))
-        frame.add_feature('y_spectral_variance'+der, np.var(frame.get_coefficients('y_spectral_cos'+der)))
-        frame.add_feature('z_spectral_variance'+der, np.var(frame.get_coefficients('z_spectral_cos'+der)))
+        frame.add_feature('x_spectral_variance' + der, np.var(frame.get_coefficients('x_spectral_cos' + der)))
+        frame.add_feature('y_spectral_variance' + der, np.var(frame.get_coefficients('y_spectral_cos' + der)))
+        frame.add_feature('z_spectral_variance' + der, np.var(frame.get_coefficients('z_spectral_cos' + der)))
 
-    def add_spectral_std(self, frame, derivative = False):
+    def add_spectral_std(self, frame, derivative=False):
         der = ''
         if derivative:
             der = '_der'
-        frame.add_feature('x_spectral_std'+der, np.std(frame.get_coefficients('x_spectral_cos'+der)))
-        frame.add_feature('y_spectral_std'+der, np.std(frame.get_coefficients('y_spectral_cos'+der)))
-        frame.add_feature('z_spectral_std'+der, np.std(frame.get_coefficients('z_spectral_cos'+der)))
+        frame.add_feature('x_spectral_std' + der, np.std(frame.get_coefficients('x_spectral_cos' + der)))
+        frame.add_feature('y_spectral_std' + der, np.std(frame.get_coefficients('y_spectral_cos' + der)))
+        frame.add_feature('z_spectral_std' + der, np.std(frame.get_coefficients('z_spectral_cos' + der)))
 
     def add_dc_component(self, frame):
         x_axis, y_axis, z_axis = frame.get_x_data(), frame.get_y_data(), frame.get_z_data()
@@ -122,32 +125,28 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         frame.add_feature('y_dc', y_dc)
         frame.add_feature('z_dc', z_dc)
 
+    def add_spectral_entropy(self, frame, derivative=False):
+        der = ''
+        if derivative:
+            der = '_der'
+        x = frame.get_coefficients('x_spectral_cos' + der)
+        y = frame.get_coefficients('y_spectral_cos' + der)
+        z = frame.get_coefficients('z_spectral_cos' + der)
 
+        _, binsx = np.histogram(x)
+        e1 = en(x, binsx)
+        frame.add_feature('x_spectral_entropy' + der, e1)
 
+        _, binsy = np.histogram(y)
+        e2 = en(y, binsy)
+        frame.add_feature('y_spectral_entropy' + der, e2)
 
-
-
-
-    def calculate_spectral_entropy(self):
-        pass
-
-    def calculate_ac_component(self):
-        pass
-
-    def calculate_correlation(self):
-        pass
-
-    def calculate_spectral_roll_off(self):
-        pass
-
-    def calculate_spectral_centeroid(self):
-        pass
-
-    def calculate_spectral_flux(self):
-        pass
+        _, binsz = np.histogram(z)
+        e3 = en(z, binsz)
+        frame.add_feature('z_spectral_entropy' + der, e3)
 
     def melFilterBank(self, blockSize):
-        numCoefficients = 13 # choose the size of mfcc array
+        numCoefficients = 13  # choose the size of mfcc array
         minHz = 0
         maxHz = 50
         numBands = int(numCoefficients)

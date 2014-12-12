@@ -17,6 +17,9 @@ class Frame(object):
     def get_label(self):
         return self.raw_data.get_label()
 
+    def get_path(self):
+        return self.raw_data.get_path()
+
     # Return all the data in the frame as a list of data row objects
     def get_frame_data(self):
         return self.data

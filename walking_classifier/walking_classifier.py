@@ -51,7 +51,8 @@ class WalkingClassifier(object):
 
         for l, c in select.iteritems():
             indices = [i for i, x in enumerate(self.cluster_labels) if x == l]
-            random.shuffle(indices)
+            if shuffle:
+                random.shuffle(indices)
             indices = indices[:c]
             for idx in indices:
                 walking_data_set.append(self.data_set[idx, :])
