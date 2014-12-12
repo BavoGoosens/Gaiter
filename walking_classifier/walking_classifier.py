@@ -10,18 +10,11 @@ import matplotlib.pyplot as plt
 
 
 class WalkingClassifier(object):
-    def __init__(self, featured_frames):
-        self.featured_frames = featured_frames
-        self.data_set = csr_matrix(self.flatten(featured_frames))
-        self.labels = list()
+    def __init__(self, data_set, labels):
+        self.data_set = data_set
+        self.data_set_labels = labels
+        self.cluster_labels = list()
         self.unique = list()
-
-    def flatten(self, featured_frame_list):
-        flat_list = list()
-        for f_frame in featured_frame_list:
-            features = f_frame.get_flat_features()
-            flat_list.append(features)
-        return flat_list
 
     def get_data_set(self):
         return self.data_set
@@ -33,20 +26,15 @@ class WalkingClassifier(object):
         for k, col in zip(range(nb_clusters), colors):
             my_members = labels == k
             cluster_center = centers[k]
-            plt.plot(self.data_set.toarray()[my_members, 0], self.data_set.toarray()[my_members, 1], col + '.')
+            plt.plot(self.data_set[my_members, 0], self.data_set[my_members, 1], col + '.')
             plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
                      markeredgecolor='k', markersize=14)
         plt.savefig(filename)
 
     def get_walking_frames(self, cutoff=0.8, method='first', shuffle=False):
-        walking_data = list()
-        clusters = defaultdict(list)
-        for idx, label in enumerate(self.labels):
-            clusters[label].append(self.featured_frames[idx])
-        if shuffle:
-            for l in clusters.itervalues():
-                random.shuffle(l)
-        count = Counter(self.labels)
+        walking_data_set = list()
+        walking_data_labels = list()
+        count = Counter(self.cluster_labels)
         select = dict()
         if method == 'even':
             for l, c in count.iteritems():
@@ -60,7 +48,15 @@ class WalkingClassifier(object):
                 elif c >= nb:
                     select[l] = nb
                     nb = 0
-        for label, number in select.iteritems():
-            data = clusters[label][:number]
-            walking_data.extend(data)
-        return walking_data
+
+        for l, c in select.iteritems():
+            indices = [i for i, x in enumerate(self.cluster_labels) if x == l]
+            random.shuffle(indices)
+            indices[:c]
+            for idx in indices:
+                walking_data_set.append(self.data_set[idx,:])
+                walking_data_labels.append(self.data_set_labels[idx, :])
+
+
+
+        return csr_matrix(walking_data_set), csr_matrix(walking_data_labels)
