@@ -14,6 +14,7 @@ from scipy.sparse import csr_matrix
 import monitor.time_complexity_monitor as moni
 import matplotlib
 import cPickle as pickle
+import os.path
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -22,96 +23,132 @@ from scipy import fft, arange
 
 
 def main(argv):
-    # test_framer()
+    # Welcome message
+    print "Welcome to Gaiter..."
+    print "First, Gaiter will load training data."
 
-    frame_size = 128
-    frame_overlap = 64
+    # Check for previous data
+    previous_data = False
+    if os.path.isfile('data.npy'):
+        # Ask user for using previous data
+        previous_data_answer =  raw_input("Gaiter has discovered there is some data available from a previous session. "
+                                          "This data is already framed and all features are already calculated. Do you "
+                                          "want to use this data? (y/n) ")
+        if previous_data_answer == 'y' or previous_data_answer == 'Y':
+            print "Gaiter will use the data from a previous session."
+            previous_data = True
 
-    data_present = True
-
-    if not data_present:
+    # Check if user wants load new data
+    if not previous_data:
+        # Ask user for path to directory of training data
+        data_path = raw_input("Please enter the path to the directory of the training data (end your path with '/'): ")
         # Load all the data
-        with Timer() as t:
-            data_loader = DataLoader("data/train/")
-            raw_data_list = data_loader.get_raw_data()
-        moni.post(t.ms, "loading", "all training data scanned and loaded")
-        print("nb of files found " + str(len(raw_data_list)))
-
+        print "Loading data from '"+data_path+"'."
+        data_loader = DataLoader(data_path)
+        raw_data_list = data_loader.get_raw_data()
+        print str(len(raw_data_list)) + " files found."
+        print "Gaiter will now start framing all the data."
         # Frame all the data
-        with Timer() as t:
-            framer = Framer(frame_size, frame_overlap)
-            for raw_data in raw_data_list:
-                framer.frame(raw_data)
-            framed_raw_data_list = framer.get_framed_raw_data_list()
-        moni.post(t.ms, "framing", "Framed all data")
+        frame_size = 128
+        frame_overlap = 64
+        framer = Framer(frame_size, frame_overlap)
+        for raw_data in raw_data_list:
+            framer.frame(raw_data)
+        framed_raw_data_list = framer.get_framed_raw_data_list()
         length = 0
         for frd in framed_raw_data_list:
             length += len(frd.get_frames())
-        print("nb of usable frames " + str(length))
+        print "Some files were not large enough for framing... "+str(len(framed_raw_data_list))+\
+              " files are divided into "+str(length)+" frames."
 
-        # create the concrete feature extractors
+        print "Gaiter will now start extracting features for all the frames. This may take a while..."
+        # Extract features
         time_feature_extractor = TimeDomainFeatureExtractor()
         freq_feature_extractor = FrequencyDomainFeatureExtractor()
-        wav_feature_extractor = WaveletFeatureExtractor()
-        # Extract features from the frames
+        # wav_feature_extractor = WaveletFeatureExtractor()
         bumpy_data_set = list()
-        raw_data_count = 1
+        raw_data_count = 0
         for framed_raw_data in framed_raw_data_list:
-            frame_count = 0
-            length = len(framed_raw_data.get_frames())
+            print str(round(raw_data_count/float(len(framed_raw_data_list))*100, 2))+" %"
             for frame in framed_raw_data.get_frames():
-                print str(raw_data_count)+": "+str(round((frame_count/float(length))*100, 2))+" %"
                 featured_frame = time_feature_extractor.extract_features(frame)
                 featured_frame = freq_feature_extractor.extract_features(featured_frame)
                 # featured_frame = wav_feature_extractor.extract_features(featured_frame)
                 bumpy_data_set.append(featured_frame)
-                frame_count = frame_count + 1
-            print str(raw_data_count)+": 100 %"
-            print ""
             raw_data_count = raw_data_count + 1
+        print "100 %"
+        print "All features are calculated. Writing all data to hard disk for later use.."
 
-        p = pickle.Pickler(open("bin.dat","wb"))
-        for data in bumpy_data_set:
-            p.dump(data)
-            p.clear_memo()
-
-       # with open('bin.dat', 'wb') as f:
-       #     pickle.dump(bumpy_data_set, f)
+        flat_data_set = flatten(bumpy_data_set)
+        data_set = np.array(flat_data_set)
+        labels = np.array(extract_labels(bumpy_data_set))
+        np.save('data', data_set)
+        np.save('labels', labels)
+        print ("The data set's dimension is " + str(data_set.shape))
+        print "All data is written to hard drive."
     else:
-        # with open('bin.dat') as f:
-        #     bumpy_data_set = pickle.load(f)
-        # print(bumpy_data_set)
-        #
-        # #km = KMeans(bumpy_data_set)
-        # kmmb = KMeansMiniBatch(bumpy_data_set)
-        # #ms = MeanShift(bumpy_data_set)
-        # #db = DBScan(bumpy_data_set)
-        #
-        # #db.train()
-        # #ms.train()
-        # kmmb.train(nb_clusters=4)
-        # #km.train(nb_clusters=4)
-        #
-        # walking_data = kmmb.get_walking_frames()
-        svm = SupportVectorMachine([])
-        svm.test()
+        print "Loading data from previous session..."
+        data_set = np.load("data.npy")
+        labels = np.load("labels.npy")
+        print ("The data set's dimension is " + str(data_set.shape))
+        print "All data from previous session loaded."
+    print "Gaiter will now train the walking classifier."
+    print "List of walking classifiers:"
+    print "1) K-means"
+    print "2) K-means mini batch"
+    print "3) Mean-shift"
+    walking_classifier_nb = raw_input("Please enter the number of the classifier you want to use: ")
+    print "Training walking classifier..."
+    if walking_classifier_nb == "1":
+        walking_classifier = KMeans(data_set, labels)
+        walking_classifier.train(4)
+    if walking_classifier_nb == "2":
+        walking_classifier = KMeansMiniBatch(data_set, labels)
+        walking_classifier.train(4)
+    if walking_classifier_nb == "3":
+        walking_classifier = MeanShift(data_set, labels)
+        walking_classifier.train()
+
+    print "The walking classifier is trained."
+    print "Gaiter will now train and test the personal classifier."
+    print "List of personal classifiers:"
+    print "1) ADA boost"
+    print "2) Random forrest"
+    print "3) Support vector machine"
+    personal_classifier_nb = raw_input("Please enter the number of the classifier you want to use: ")
+    print "Training personal classifier..."
+    if personal_classifier_nb == "1":
+        pass
+    if personal_classifier_nb == "2":
+        pass
+    if personal_classifier_nb == "3":
+        pass
+
+def flatten(featured_frame_list):
+    flat_list = list()
+    for f_frame in featured_frame_list:
+        features = f_frame.get_flat_features()
+        flat_list.append(features)
+    return flat_list
 
 
+def extract_labels(featured_frame_list):
+    classes = list()
+    for featured_frame in featured_frame_list:
+        l = featured_frame.get_label()
+        classes.append(l)
+    return classes
 
-def test_framer():
-    data = range(1, 100 + 1)
-    framer = Framer(6, 2)
-    framer.frame(data)
-    frames = framer.get_frames()
-    print "Frames:"
-    i = 1
-    for frame in frames:
-        print "Frame " + str(i)
-        print "Data: " + str(frame.get_data())
-        print "Core data: " + str(frame.get_core_data())
-        print "Overlapped data: " + str(frame.get_overlap_data())
-        i += 1
 
+def save_sparse_csr(filename, array):
+    np.savez(filename, data=array.data, indices=array.indices,
+             indptr=array.indptr, shape=array.shape)
+
+
+def load_sparse_csr(filename):
+    loader = np.load(filename)
+    return csr_matrix((  loader['data'], loader['indices'], loader['indptr']),
+                      shape=loader['shape'])
 
 if __name__ == '__main__':
     main(sys.argv[1:])

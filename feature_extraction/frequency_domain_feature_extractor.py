@@ -13,8 +13,8 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         # add coefficients
         self.add_spectral_coefficients(frame)
 
-        # add coefficients derivative
-        self.add_spectral_coefficients(frame, True)
+        '''# add coefficients derivative
+        self.add_spectral_coefficients(frame, True)'''
 
         # add features
         self.add_spectral_mean(frame)
@@ -23,11 +23,11 @@ class FrequencyDomainFeatureExtractor(FeatureExtractor):
         self.add_spectral_std(frame)
         self.add_dc_component(frame)
 
-        # add features derivative
+        '''# add features derivative
         self.add_spectral_mean(frame, True)
         self.add_spectral_energy(frame, True)
         self.add_spectral_variance(frame, True)
-        self.add_spectral_std(frame, True)
+        self.add_spectral_std(frame, True)'''
 
         return frame
 
