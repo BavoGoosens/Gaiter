@@ -16,12 +16,12 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         if not isinstance(frame, FeaturedFrame):
             frame = FeaturedFrame(frame)
 
-        '''# add derivatives
+        # add derivatives
         self.add_derivative_coefficients(frame)
-        self.add_second_derivative_coefficients(frame)'''
+        self.add_second_derivative_coefficients(frame)
 
-        '''# add peaks
-        self.add_peaks(frame)'''
+        # add peaks
+        self.add_peaks(frame)
 
         # add features
         self.add_mean(frame)
@@ -39,14 +39,14 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         self.add_skewness(frame)
         self.add_median(frame)
         self.add_std(frame)
-        '''self.add_avg_min_peak_distance(frame)
+        self.add_avg_min_peak_distance(frame)
         self.add_avg_max_peak_distance(frame)
         self.add_mean_min_peaks(frame)
         self.add_mean_max_peaks(frame)
         self.add_variance_min_peaks(frame)
-        self.add_variance_max_peaks(frame)'''
+        self.add_variance_max_peaks(frame)
 
-        '''# add derivative features
+        # add derivative features
         self.add_mean(frame, True)
         self.add_integral(frame, True)
         self.add_kurtosis(frame, True)
@@ -61,7 +61,7 @@ class TimeDomainFeatureExtractor(FeatureExtractor):
         self.add_percentiles(frame, True)
         self.add_skewness(frame, True)
         self.add_median(frame, True)
-        self.add_std(frame, True)'''
+        self.add_std(frame, True)
 
         return frame
 

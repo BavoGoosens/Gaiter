@@ -38,7 +38,7 @@ def main(argv):
                                           "This data is already framed and all features are already calculated. Do you "
                                           "want to use this data? (y/n) ")
         if previous_data_answer == 'y' or previous_data_answer == 'Y':
-            print "Gaiter will use the data from a previous session."
+            print "Using the data from a previous session."
             previous_data = True
 
     # Check if user wants load new data
@@ -50,7 +50,7 @@ def main(argv):
         data_loader = DataLoader(data_path)
         raw_data_list = data_loader.get_raw_data()
         print str(len(raw_data_list)) + " files found."
-        print "Gaiter will now start framing all the data."
+        print "Framing all the data."
         # Frame all the data
         frame_size = 128
         frame_overlap = 64
@@ -80,7 +80,7 @@ def main(argv):
                 bumpy_data_set.append(featured_frame)
             raw_data_count = raw_data_count + 1
         print "100 %"
-        print "All features are calculated. Writing all data to hard disk for later use.."
+        print "All features are calculated. Writing all data to hard disk for later use..."
 
         flat_data_set = flatten(bumpy_data_set)
         data_set = np.array(flat_data_set)
