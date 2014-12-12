@@ -27,6 +27,7 @@ from scipy import fft, arange
 
 def main(argv):
     # Welcome message
+    print ""
     print "Welcome to Gaiter..."
     print "First, Gaiter will load training data."
 
@@ -38,19 +39,23 @@ def main(argv):
                                           "This data is already framed and all features are already calculated. Do you "
                                           "want to use this data? (y/n) ")
         if previous_data_answer == 'y' or previous_data_answer == 'Y':
-            print "Gaiter will use the data from a previous session."
+            print "Using the data from a previous session."
             previous_data = True
-
+    print ""
     # Check if user wants load new data
     if not previous_data:
         # Ask user for path to directory of training data
         data_path = raw_input("Please enter the path to the directory of the training data (end your path with '/'): ")
         # Load all the data
         print "Loading data from '"+data_path+"'."
+        print "..."
+        print ""
         data_loader = DataLoader(data_path)
         raw_data_list = data_loader.get_raw_data()
         print str(len(raw_data_list)) + " files found."
-        print "Gaiter will now start framing all the data."
+        print "Framing all the data."
+        print "..."
+        print ""
         # Frame all the data
         frame_size = 128
         frame_overlap = 64
@@ -68,8 +73,11 @@ def main(argv):
             length += len(frd.get_frames())
         print "Some files were not large enough for framing... "+str(len(framed_raw_data_list))+\
               " files are divided into "+str(length)+" frames."
+        print ""
 
-        print "Gaiter will now start extracting features for all the frames. This may take a while..."
+        print "Extracting features for all the frames. This may take a while."
+        print "..."
+        print ""
         # Extract features
         time_feature_extractor = TimeDomainFeatureExtractor()
         freq_feature_extractor = FrequencyDomainFeatureExtractor()
@@ -85,7 +93,10 @@ def main(argv):
                 bumpy_data_set.append(featured_frame)
             raw_data_count = raw_data_count + 1
         print "100 %"
-        print "All features are calculated. Writing all data to hard disk for later use.."
+        print ""
+        print "All features are calculated. Writing all data to hard disk for later use."
+        print "..."
+        print ""
 
         random.seed(0)
         random.shuffle(bumpy_data_set)
@@ -99,20 +110,33 @@ def main(argv):
         np.save('data', train_data_set)
         np.save('labels', train_labels)
         print ("The data set's dimension is " + str(train_data_set.shape))
+
+        flat_data_set = flatten(bumpy_data_set)
+        data_set = np.array(flat_data_set)
+        labels = np.array(extract_labels(bumpy_data_set))
+        np.save('data', data_set)
+        np.save('labels', labels)
+
         print "All data is written to hard drive."
+        print ("The data set's dimension is " + str(data_set.shape))
     else:
-        print "Loading data from previous session..."
+        print "Loading data from previous session."
+        print "..."
         data_set = np.load("data.npy")
         labels = np.load("labels.npy")
-        print ("The data set's dimension is " + str(data_set.shape))
         print "All data from previous session loaded."
+        print ("The data set's dimension is " + str(data_set.shape))
+    print ""
     print "Gaiter will now train the walking classifier."
     print "List of walking classifiers:"
     print "1) K-means"
     print "2) K-means mini batch"
     print "3) Mean-shift"
+    print ""
     walking_classifier_nb = raw_input("Please enter the number of the classifier you want to use: ")
-    print "Training walking classifier..."
+    print "Training walking classifier."
+    print "..."
+    print ""
     if walking_classifier_nb == "1":
         walking_classifier = KMeans(data_set, labels)
         walking_classifier.train(4)
@@ -124,13 +148,17 @@ def main(argv):
         walking_classifier.train()
 
     print "The walking classifier is trained."
+    print ""
     print "Gaiter will now train and test the personal classifier."
     print "List of personal classifiers:"
     print "1) ADA boost"
     print "2) Random forrest"
     print "3) Support vector machine"
+    print ""
     personal_classifier_nb = raw_input("Please enter the number of the classifier you want to use: ")
-    print "Training personal classifier..."
+    print "Training personal classifier."
+    print "..."
+    print ""
     if personal_classifier_nb == "1":
         pass
     if personal_classifier_nb == "2":
