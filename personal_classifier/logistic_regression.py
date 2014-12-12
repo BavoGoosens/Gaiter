@@ -1,47 +1,22 @@
 from personal_classifier import PersonalClassifier
 from sklearn.linear_model import LogisticRegression as LR
-from sklearn.datasets import load_iris
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class LogisticRegression(PersonalClassifier):
-    def __init__(self, featured_frames):
-        super(LogisticRegression, self).__init__(featured_frames)
+    def __init__(self, data_set, labels):
+        super(LogisticRegression, self).__init__(data_set, labels)
 
-    def test(self):
-        iris = load_iris()
-        X = iris.data
-        Y = iris.target
+    def train(self):
+        x = self.data_set
+        y = self.labels
 
-        h = .02  # step size in the mesh
-
-        logreg = LR(C=1e5)
+        log_reg = LR(C=1e5)
 
         # we create an instance of Neighbours Classifier and fit the data.
-        logreg.fit(X, Y)
+        log_reg.fit(x, y)
 
-        # Plot the decision boundary. For that, we will assign a color to each
-        # point in the mesh [x_min, m_max]x[y_min, y_max].
-        x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
-        y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
-        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-        Z = logreg.predict(np.c_[xx.ravel(), yy.ravel()])
-
-        # Put the result into a color plot
-        Z = Z.reshape(xx.shape)
-        plt.figure(1, figsize=(4, 3))
-        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
-
-        # Plot also the training points
-        plt.scatter(X[:, 0], X[:, 1], c=Y, edgecolors='k', cmap=plt.cm.Paired)
-        plt.xlabel('Sepal length')
-        plt.ylabel('Sepal width')
-
-        plt.xlim(xx.min(), xx.max())
-        plt.ylim(yy.min(), yy.max())
-        plt.xticks(())
-        plt.yticks(())
-
-        plt.savefig('img/logistic_reg')
+        self.set_classifier(log_reg)
