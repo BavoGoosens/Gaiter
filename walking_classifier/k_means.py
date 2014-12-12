@@ -13,6 +13,7 @@ class KMeans(WalkingClassifier):
         kmeans = KM(n_clusters=nb_clusters, init='k-means++')
         kmeans.fit(data_set)
 
+        self.set_classifier(kmeans)
         self.cluster_labels = kmeans.labels_
         k_means_cluster_centers = kmeans.cluster_centers_
         k_means_labels_unique = np.unique(self.cluster_labels)

@@ -18,6 +18,7 @@ class KMeansMiniBatch(WalkingClassifier):
         mbk_means_cluster_centers = mbk.cluster_centers_
         mbk_means_labels_unique = np.unique(self.cluster_labels)
 
+        self.set_classifier(mbk)
         self.unique = mbk_means_labels_unique
         print("###########################MBK means######################################")
         print(Counter(self.cluster_labels))

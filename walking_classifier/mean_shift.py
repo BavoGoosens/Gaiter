@@ -21,6 +21,7 @@ class MeanShift(WalkingClassifier):
         cluster_centers = ms.cluster_centers_
         labels_unique = np.unique(self.cluster_labels)
 
+        self.set_classifier(ms)
         self.unique = labels_unique
         n_clusters_ = len(labels_unique)
 

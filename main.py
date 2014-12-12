@@ -190,6 +190,7 @@ def main(argv):
         walking_classifier = MeanShift(train_data_set, train_labels)
         walking_classifier.train()
     walking_data_set, walking_labels = walking_classifier.get_walking_frames()
+
     print "The walking classifier is trained."
     print ""
     print "Gaiter will now train and test the personal classifier."
@@ -240,6 +241,10 @@ def main(argv):
     if personal_classifier_nb == "4":
         pc = LogisticRegression(walking_data_set, walking_labels)
         pc.train()
+
+    wk = WalkingClassifier(test_data_set, test_labels)
+    wk.set_classifier(walking_classifier.get_classifier())
+    test_data_set, test_labels = wk.classify()
     val = Validator()
     val.calculate_confusion_matrix(pc, test_data_set, test_labels)
 

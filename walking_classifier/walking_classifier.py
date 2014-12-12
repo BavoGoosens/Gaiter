@@ -58,3 +58,13 @@ class WalkingClassifier(object):
                 walking_data_set.append(self.data_set[idx, :])
                 walking_data_labels.append(self.data_set_labels[idx])
         return np.array(walking_data_set), np.array(walking_data_labels)
+
+    def set_classifier(self, clf):
+        self.classifier = clf
+
+    def get_classifier(self):
+        return self.classifier
+
+    def classify(self):
+        self.cluster_labels = self.classifier.predict(self.data_set)
+        return self.get_walking_frames()
