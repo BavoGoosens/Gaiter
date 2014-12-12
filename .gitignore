@@ -234,3 +234,5 @@ out/*
 *.iml
 .vagrant/
 bin.dat
+data.npy
+labels.npy

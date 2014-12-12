@@ -1,22 +1,16 @@
 from scipy.sparse import csr_matrix
-
+import numpy as np
 
 class PersonalClassifier(object):
-    def __init__(self, featured_frames):
-        self.frames = featured_frames
-        self.data_set = csr_matrix(self.flatten(self.frames))
-        self.labels = self.extract_labels(self.frames)
+    def __init__(self, data_set, labels):
+        self.data_set = data_set
+        self.labels = labels
 
-    def flatten(self, featured_frame_list):
-        flat_list = list()
-        for f_frame in featured_frame_list:
-            features = f_frame.get_flat_features()
-            flat_list.append(features)
-        return flat_list
+    def set_classifier(self, clf):
+        self.classifier = clf
 
-    def extract_labels(self, featured_frame_list):
-        classes = list()
-        for featured_frame in featured_frame_list:
-            l = featured_frame.get_label()
-            classes.append(l)
-        return classes
+    def get_classifier(self):
+        return self.classifier
+
+    def classify(self, featured_frames):
+        return self.classifier.predict(featured_frames)

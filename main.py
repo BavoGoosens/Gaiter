@@ -22,10 +22,7 @@ import matplotlib.pyplot as plt
 from scipy import fft, arange
 
 
-
-
 def main(argv):
-
     # Welcome message
     print "Welcome to Gaiter..."
     print "First, Gaiter will load training data."
