@@ -217,12 +217,11 @@ def main(argv):
         clf = ExtraTreesClassifier()
         selector = clf.fit(walking_data_set, walking_labels)
     if sel == "3":
-        selector = LinearSVC(C=0.01, penalty="l1", dual=False).fit_transform(walking_data_set, walking_labels)
+        selector = LinearSVC(C=0.01, penalty="l1", dual=False).fit(walking_data_set, walking_labels)
     if sel == "4":
         selector = None
 
     if selector is not None:
-        selector = SelectKBest(f_classif, k=30).fit(walking_data_set, walking_labels)
         walking_data_set = selector.transform(walking_data_set)
         test_data_set = selector.transform(test_data_set)
     print "Training personal classifier."
