@@ -224,7 +224,7 @@ def main(argv):
 
     if selector is not None:
         walking_data_set = selector.transform(walking_data_set)
-        test_data_set = selector.transform(test_data_set)
+
     print "Training personal classifier."
     print "..."
     print ""
@@ -244,6 +244,8 @@ def main(argv):
     wk = WalkingClassifier(test_data_set, test_labels)
     wk.set_classifier(walking_classifier.get_classifier())
     test_data_set, test_labels = wk.classify()
+    if selector is not None:
+        test_data_set = selector.transform(test_data_set)
     val = Validator()
     val.calculate_confusion_matrix(pc, test_data_set, test_labels)
 
